@@ -46,4 +46,12 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 /*
     >>> Escriba su respuesta a partir de este punto <<<
 */
+DROP TABLE IF EXISTS DATOS;
+create table DATOS as 
+select c2, punto8.key, punto8.value  from tbl0
+lateral view explode(c6) punto8 As key, value;
 
+INSERT OVERWRITE DIRECTORY 'output/'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+select c2, SUM(value) from DATOS
+GROUP BY c2;
