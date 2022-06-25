@@ -45,4 +45,18 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
 /*
     >>> Escriba su respuesta a partir de este punto <<<
 */
+INSERT OVERWRITE DIRECTORY 'output/'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
 
+SELECT unal.c1, unal.c2, cla.valor
+
+from tbl0 unal
+
+join (
+SELECT c1, clave, valor
+FROM tbl1 
+LATERAL VIEW 
+    explode(c4) tbl1 AS clave, valor) cla
+ON(unal.c1 = cla.c1
+and unal.c2 = cla.clave); 
