@@ -28,4 +28,10 @@ LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 /*
     >>> Escriba su respuesta a partir de este punto <<<
 */
+DROP TABLE IF EXISTS DATOS;
+create table DATOS as 
+select c1, SIZE(c2) AS c2, SIZE(c3) as c3 from t0;
 
+INSERT OVERWRITE DIRECTORY 'output/'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+select c1, c2, c3 from DATOS;

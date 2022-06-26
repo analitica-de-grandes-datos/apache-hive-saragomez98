@@ -29,4 +29,12 @@ LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 /*
     >>> Escriba su respuesta a partir de este punto <<<
 */
+DROP TABLE IF EXISTS DATOS;
+create table DATOS as 
+select unal.key, unal.value  from t0
+lateral view explode(c3) unal As key, value;
 
+INSERT OVERWRITE DIRECTORY 'output/'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+select key, COUNT(value) from DATOS
+GROUP BY key; 
